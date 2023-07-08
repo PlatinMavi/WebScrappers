@@ -8,7 +8,7 @@ import os
 
 class AsuraScrapper():
     def __init__(self) -> None:
-        self.client = pymongo.MongoClient("")
+        self.client = pymongo.MongoClient("mongodb+srv://PlatinMavi:23TprQmteTiPJA6r@mangabridge.qceexb2.mongodb.net/?retryWrites=true&w=majority")
         self.db = self.client["test"]
         self.collection = self.db["mangas"]
         self.chapter = self.db["chapters"]
@@ -130,7 +130,7 @@ class AsuraScrapper():
                 response = requests.get(image_link)
                 if response.status_code == 200:
                     # Extract the filename from the URL
-                    filename = os.path.join("AsuraScans", name+".png")
+                    filename = os.path.join("AsuraScans", name+"AsuraScans"+".png")
 
                     # Save the image file
                     with open(filename, "wb") as file:
@@ -159,10 +159,9 @@ class AsuraScrapper():
 
   
 sc = AsuraScrapper()
-sc.scrapeImage()
 
-# print(sc.SeriResim())
-# print(sc.ChapterInsert())
+print(sc.SeriResim())
+print(sc.ChapterInsert())
 
 
 
