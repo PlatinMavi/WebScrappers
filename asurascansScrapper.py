@@ -9,13 +9,13 @@ import os
 class AsuraScrapper():
     def __init__(self) -> None:
         self.client = pymongo.MongoClient("mongodb+srv://PlatinMavi:23TprQmteTiPJA6r@mangabridge.qceexb2.mongodb.net/?retryWrites=true&w=majority")
-        self.db = self.client["test"]
+        self.db = self.client["AsuraScans"]
         self.collection = self.db["mangas"]
         self.chapter = self.db["chapters"]
         self.index = 0
         
 
-    def SeriUrl(self):
+    def GetAllManga(self):
         url = "https://asurascanstr.com/manga/list-mode/"
         html = requests.get(url).content.decode("utf-8", errors="ignore")
         soup = BeautifulSoup(html,"html.parser")
@@ -34,8 +34,8 @@ class AsuraScrapper():
         FixedMangas = list({str(item): item for item in mangasraw}.values())
         return FixedMangas 
     
-    def SeriResim(self):
-        content = self.SeriUrl()
+    def InsertManga(self):
+        content = self.GetAllManga()
         total = len(content)
         hata = []
         
@@ -84,8 +84,8 @@ class AsuraScrapper():
 
         return print("ok",hata)
     
-    def ChapterInsert(self):
-        content = self.SeriUrl()
+    def InsertChapters(self):
+        content = self.GetAllManga()
         total = len(content)
         index = 0
         for manga in content:
@@ -142,7 +142,7 @@ class AsuraScrapper():
             except Exception as e:
                 print(f"Error downloading image: {str(e)}")
 
-        content = self.SeriUrl()
+        content = self.GetAllManga()
         total = len(content)
         index = 0
         for manga in content:
@@ -160,12 +160,5 @@ class AsuraScrapper():
   
 sc = AsuraScrapper()
 
-print(sc.SeriResim())
-print(sc.ChapterInsert())
-
-
-
-
-
-
-
+print(sc.InsertManga())
+print(sc.InsertChapters())

@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 import os
 from PIL import Image
 import pymongo
+import traceback
 
 class WebtoonScrapper():
     def __init__(self) -> None:
@@ -141,6 +142,7 @@ class WebtoonScrapper():
                     index = index+1
 
                     self.collection.insert_one(ins)
+                    
 
                     print(f"({index}/{total}) , {ins['name']}")
                 except:
@@ -177,28 +179,38 @@ class WebtoonScrapper():
                                 try:
                                     number = int(content.strip().split(" ")[-1])
                                 except:
-                                    try:
-                                        number = ins[-1]["number"]-1
-                                    except:
-                                        number = len(tag)
+                                        content = str(x.contents[0])
+                                        p = content.split("\n")[1].strip()
+                                        number = int(p.split(".")[0])
+                                        
+                            except:
+                                try:
+                                    number = ins[-1]["number"]-1
 
-                            except Exception as e:
-
-                                print(e,"i am done")
-
+                                except:
+                                    number = len(tag)
 
                             insert = {"number":number,"url":link,"manga":Query["_id"],"fansub":"WebtoonTr","createdAt":createdAt}
+                            
                             ins.append(insert)
                         except Exception as e:
                             print(e)
+                            traceback_str = ''.join(traceback.format_tb(e.__traceback__))
+                            print(traceback_str)
                             print("this site is just dumb")
                     index = index+1
 
                     self.chapter.insert_many(ins)
+                    
                     print(f"({index}/{total}) , {manga['name']}")
                 except Exception as e:
                     print(e.__cause__)
+                    traceback_str = ''.join(traceback.format_tb(e.__traceback__))
+                    print(traceback_str)
                     print("f this bro")
 
+
+
 s = WebtoonScrapper()
+s.InsertMangas()
 s.InsertChapters()
