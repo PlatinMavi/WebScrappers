@@ -2,7 +2,6 @@ from bs4 import BeautifulSoup
 import requests
 import pymongo
 import datetime
-import threading
 import re
 import os
 

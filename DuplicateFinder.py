@@ -14,12 +14,15 @@ class Detector():
         self.Combined = self.client["combined"]
         self.CM =self.Combined["mangas"]
         self.CC = self.Combined["chapters"]
+        self.Hayalistic = self.client["Hayalistic"]
+        self.H_manga = self.Hayalistic["mangas"]
+        self.H_chapter = self.Hayalistic["chapters"]
 
         # self.result = self.client["results"]
         # self.duplicates = 
 
     def GetAll(self):
-        allmanga = [self.W_manga.find({}),self.A_manga.find({})]
+        allmanga = [self.W_manga.find({}),self.A_manga.find({}),self.H_manga.find({})]
         mangas =[]
         
         for x in allmanga:
@@ -74,10 +77,10 @@ class Detector():
         return data
         
     def CombineChapers(self):
-        a = self.A_chapter.find({})
-        b = self.W_chapter.find({})
+        # a = self.A_chapter.find({})
+        b = self.H_chapter.find({})
         
-        self.CC.insert_many(a)
+        # self.CC.insert_many(a)
         self.CC.insert_many(b)
 
     def ImageUpdate(self):
@@ -89,14 +92,12 @@ class Detector():
             try:
                 image_path = os.path.join(image_directory, filename)
                 if os.path.isfile(image_path):
-                    with open(image_path, "rb") as file:
-                        encoded_string = base64.b64encode(file.read())
-                        base64_image = encoded_string.decode("utf-8")
-                        browser = filename.split("_")[1]
+                    
+                    browser = filename.split(".")[0]
                     index = index+1
                     # document = {"image_name": filename, "image": base64_image}
-                    self.CM.update_one({"browser":browser},{"$set":{"image":base64_image}})
-                    print(f"( {index} / {total} )")
+                    g =self.CM.update_one({"browser":browser},{"$set":{"image":f"{browser}.png"}})
+                    print(f"( {index} / {total} )" ,browser)
             except:
                 print("duplicate probably deletetd")
         return print("done")
