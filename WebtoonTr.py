@@ -213,5 +213,4 @@ class WebtoonScrapper():
 
 
 s = WebtoonScrapper()
-s.InsertMangas()
-s.InsertChapters()
+print(s.GetTotalPages())

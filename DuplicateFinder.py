@@ -76,12 +76,8 @@ class Detector():
         ff = self.CM.insert_many(data)
         return data
         
-    def CombineChapers(self):
-        # a = self.A_chapter.find({})
-        b = self.H_chapter.find({})
-        
-        # self.CC.insert_many(a)
-        self.CC.insert_many(b)
+    def CombineChapers(self,x):
+        self.CC.insert_many(x)
 
     def ImageUpdate(self):
         image_directory = "C:/Users/PC/Desktop/Scrapper/Collection"
