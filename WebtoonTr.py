@@ -19,7 +19,9 @@ class WebtoonScrapper():
 
     def GetTotalPages(self):
         options = ChromeOptions()
-        options.add_argument('--headless')
+        options.add_argument('--head')
+        options.add_argument("start-maximized")
+        options.add_argument('--user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36"')
 
         with Chrome(options=options) as driver:
             driver.get("https://webtoon-tr.com/webtoon/?m_orderby=alphabet")
