@@ -1,8 +1,0 @@
-PlatinMavi=23TprQmteTiPJA6r
-mongodb+srv://PlatinMavi:<password>@mangabridge.qceexb2.mongodb.net/?retryWrites=true&w=majority
-
-alpergezer13=NrcUzwUZBgBIdTgf
-mongodb+srv://alpergezer13:<password>@blog.ff46lzf.mongodb.net/?retryWrites=true&w=majority
-
-TEST DATABASE:
-mongodb+srv://alpergezer13:alpergezer13@mangabridgetest.a4ggcj9.mongodb.net/?retryWrites=true&w=majority

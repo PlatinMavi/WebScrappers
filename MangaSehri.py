@@ -3,7 +3,6 @@ from undetected_chromedriver import Chrome, ChromeOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from seleniumbase import Driver
 import requests
 from bs4 import BeautifulSoup
 import datetime
@@ -16,9 +15,6 @@ class MangaSehriScrapper():
     def GetTotalPages(self):
         options = ChromeOptions()
         options.add_argument('--head')
-        # options.add_argument('--disable-blink-features=AutomationControlled')
-        options.add_argument("start-maximized")
-        options.add_argument('--user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36"')
 
         with Chrome(options=options) as driver:
            
@@ -69,9 +65,5 @@ class MangaSehriScrapper():
                 elements = driver.execute_script("return document.getElementsByClassNamr('more')")
                 print(elements)
     
-# ms = MangaSehriScrapper()
-# print(ms.GetTotalPages())
-
-driver = Driver(uc=True)
-driver.get("https://mangasehri.com/manga/?m_orderby=alphabet")
-WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CLASS_NAME, "pages")))
+ms = MangaSehriScrapper()
+print(ms.InsertMangas())
