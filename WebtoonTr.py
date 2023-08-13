@@ -8,6 +8,7 @@ import os
 from PIL import Image
 import pymongo
 import traceback
+from Parser import Parser
 
 class WebtoonScrapper():
     def __init__(self) -> None:
@@ -19,9 +20,9 @@ class WebtoonScrapper():
 
     def GetTotalPages(self):
         options = ChromeOptions()
-        options.add_argument('--head')
+        options.add_argument('--headless')
         options.add_argument("start-maximized")
-        options.add_argument('--user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36"')
+        # options.add_argument('--user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36"')
 
         with Chrome(options=options) as driver:
             driver.get("https://webtoon-tr.com/webtoon/?m_orderby=alphabet")
@@ -36,6 +37,7 @@ class WebtoonScrapper():
     def GetAllMangas(self):
         options = ChromeOptions()
         options.add_argument('--headless')
+        options.add_argument("start-maximized")
 
         LastPage = self.GetTotalPages()
         Mangas = []
@@ -46,21 +48,15 @@ class WebtoonScrapper():
                 WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CLASS_NAME, "item-thumb")))
                 elements = driver.execute_script('return document.getElementsByClassName("item-thumb");')
                 for html in elements:
-                    soup = BeautifulSoup(html.get_attribute("outerHTML"), "html.parser")
-                    link = soup.find("a").get("href")
-                    browser = link.split("/")[-2]
-                    title = soup.find("a").get("title")
-                    image = soup.find("img").get("src")
-
-                    f = {"Link": link, "name": title, "browser": browser, "image": image}
-
+                    f = Parser.ParseMangaData("webtoontr", html)
                     Mangas.append(f)
-                print(f"({x} / {LastPage+1}) getting all mangas...")
+                print(f"({x} / {LastPage+1})", f["name"])
         return Mangas
     
     def GetImages(self):
         options = ChromeOptions()
         options.add_argument('--headless')
+        options.add_argument("start-maximized")
 
         data = self.GetAllMangas()
         output_directory = "WebtoonTr"  # Directory to save the images
@@ -103,9 +99,10 @@ class WebtoonScrapper():
     def InsertMangas(self):
         options = ChromeOptions()
         options.add_argument('--headless')
+        options.add_argument("start-maximized")
 
-        data = self.GetAllMangas()
-        # data = [{"Link":"https://webtoon-tr.com/webtoon/99-wooden-stick-3/","name":"Bug Train","image":"https://webtoon-tr.com/wp-content/uploads/bug-train.png","browser":"bug-train"}]
+        # data = self.GetAllMangas()
+        data = [{"Link":"https://webtoon-tr.com/webtoon/99-wooden-stick-3/","name":"Bug Train","image":"https://webtoon-tr.com/wp-content/uploads/bug-train.png","browser":"bug-train"}]
         total = len(data)
         index = 0
         with Chrome(options=options) as driver:
@@ -117,45 +114,23 @@ class WebtoonScrapper():
                     element = driver.execute_script('return document.getElementsByClassName("summary_content");')
                     soup = BeautifulSoup(element[0].get_attribute("outerHTML"), "html.parser")
 
-                    allGenre = []
-                    try:
-                        desc = soup.find_all("div", {"class":"manga-excerpt"})[0].find_all("p")[1].contents[0]
-                    except:
-                        try:
-                            desc = soup.find_all("div", {"class":"manga-excerpt"})[0].find_all("p")[0].contents[0]
-                        except:
-                            desc = ""
-                            print("couldnt get description")
-                    name = manga["name"]
-                    image = manga["image"]
-                    browser = manga["browser"]
-
-                    genreC = soup.find("div",{"class":"genres-content"})
-                    genre = genreC.find_all("a",{"rel":"tag"})
-                    for b in genre:
-                        g = b.contents[0]
-                        if " "in g:
-                            g.replace(" ","")
-                            allGenre.append(g)
-                        else:
-                            allGenre.append(g)
-
-                    ins = {"name":name,"image":image,"desc":desc,"category":allGenre,"browser":browser}
+                    ins = Parser.GetMangaDataDetail("webtoontr",soup)
 
                     index = index+1
 
-                    self.collection.insert_one(ins)
-                    
+                    # self.collection.insert_one(ins)
 
                     print(f"({index}/{total}) , {ins['name']}")
-                except:
+                except Exception as e:
                     print("i hate fucking cloudflare protected websites")
+                    print(e)
 
         return print("inserted")
     
     def InsertChapters(self):
         options = ChromeOptions()
         options.add_argument('--headless')
+        options.add_argument("start-maximized")
         # data = [{"Link":"https://webtoon-tr.com/webtoon/return-of-the-8th-class-magician-6/","name":"Bug Train","image":"https://webtoon-tr.com/wp-content/uploads/bug-train.png","browser":"99-wooden-stick-3"}]
         index = 0
         data = self.GetAllMangas()
@@ -215,4 +190,4 @@ class WebtoonScrapper():
 
 
 s = WebtoonScrapper()
-print(s.GetTotalPages())
+print(s.InsertMangas())

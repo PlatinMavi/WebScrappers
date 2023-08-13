@@ -27,6 +27,15 @@ class Parser:
                             mangasraw.append({"Title":Title,"Link":Link})
                 return list({str(item): item for item in mangasraw}.values())
             
+            case "webtoontr":
+                soup = BeautifulSoup(url.get_attribute("outerHTML"), "html.parser")
+                link = soup.find("a").get("href")
+                browser = link.split("/")[-2]
+                title = soup.find("a").get("title")
+                image = soup.find("img").get("src")
+
+                return {"Link": link, "name": title, "browser": browser, "image": image}
+            
     def GetMangaDataDetail(sub,manga):
         match sub:
             case "asura":
@@ -64,6 +73,33 @@ class Parser:
                     print("error", url)
 
                 return {"name":title,"image":image,"desc":desc,"category":categorys,"browser":browser}
+            
+            case "webtoontr":
+                soup = manga
+                allGenre = []
+                try:
+                    desc = soup.find_all("div", {"class":"manga-excerpt"})[0].find_all("p")[1].contents[0]
+                except:
+                    try:
+                        desc = soup.find_all("div", {"class":"manga-excerpt"})[0].find_all("p")[0].contents[0]
+                    except:
+                        desc = ""
+                        print("couldnt get description")
+                name = manga["name"]
+                image = manga["image"]
+                browser = manga["browser"]
+
+                genreC = soup.find("div",{"class":"genres-content"})
+                genre = genreC.find_all("a",{"rel":"tag"})
+                for b in genre:
+                    g = b.contents[0]
+                    if " "in g:
+                        g.replace(" ","")
+                        allGenre.append(g)
+                    else:
+                        allGenre.append(g)
+
+                return {"name":name,"image":image,"desc":desc,"category":allGenre,"browser":browser}
             
     def GetChapterData(sub,manga):
         match sub:
