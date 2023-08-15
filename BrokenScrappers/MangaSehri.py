@@ -66,4 +66,4 @@ class MangaSehriScrapper():
                 print(elements)
     
 ms = MangaSehriScrapper()
-print(ms.InsertMangas())
+print(ms.GetTotalPages())

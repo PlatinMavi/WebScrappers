@@ -11,11 +11,7 @@ import traceback
 
 class WebtoonScrapper():
     def __init__(self) -> None:
-
-        self.client = pymongo.MongoClient("mongodb+srv://PlatinMavi:23TprQmteTiPJA6r@mangabridge.qceexb2.mongodb.net/?retryWrites=true&w=majority")
-        self.db = self.client["WebtoonTr"]
-        self.collection = self.db["mangas"]
-        self.chapter = self.db["chapters"]
+        pass
 
     def GetTotalPages(self):
         options = ChromeOptions()
@@ -101,10 +97,11 @@ class WebtoonScrapper():
 
         return print("Images downloaded successfully.")
     
-    def InsertMangas(self):
+    def GetAllMangasData(self):
         options = ChromeOptions()
         options.add_argument('--headless')
         options.add_argument("start-maximized")
+        returnies = []
 
         data = self.GetAllMangas()
         # data = [{"Link":"https://webtoon-tr.com/webtoon/99-wooden-stick-3/","name":"Bug Train","image":"https://webtoon-tr.com/wp-content/uploads/bug-train.png","browser":"bug-train"}]
@@ -146,19 +143,20 @@ class WebtoonScrapper():
 
                     index = index+1
 
-                    self.collection.insert_one(ins)
+                    returnies.append(ins)
                     
 
                     print(f"({index}/{total}) , {ins['name']}")
                 except:
                     print("i hate fucking cloudflare protected websites")
 
-        return print("inserted")
+        return returnies
     
-    def InsertChapters(self):
+    def GetAllChapters(self):
         options = ChromeOptions()
         options.add_argument('--headless')
         options.add_argument("start-maximized")
+        returnies = []
         # data = [{"Link":"https://webtoon-tr.com/webtoon/return-of-the-8th-class-magician-6/","name":"Bug Train","image":"https://webtoon-tr.com/wp-content/uploads/bug-train.png","browser":"99-wooden-stick-3"}]
         index = 0
         data = self.GetAllMangas()
@@ -177,7 +175,6 @@ class WebtoonScrapper():
                     for x in tag:         
                         try:
                             number = None
-                            Query = self.collection.find_one({"browser":manga["browser"]})
                             link = x.get("href")
                             createdAt = datetime.datetime.now()
                             try:
@@ -196,7 +193,7 @@ class WebtoonScrapper():
                                 except:
                                     number = len(tag)
 
-                            insert = {"number":number,"url":link,"manga":Query["_id"],"fansub":"WebtoonTr","createdAt":createdAt}
+                            insert = {"number":number,"url":link,"manga":manga["Link"],"fansub":"WebtoonTr","createdAt":createdAt}
                             
                             ins.append(insert)
                         except Exception as e:
@@ -206,7 +203,7 @@ class WebtoonScrapper():
                             print("this site is just dumb")
                     index = index+1
 
-                    self.chapter.insert_many(ins)
+                    returnies.append(ins)
                     
                     print(f"({index}/{total}) , {manga['name']}")
                 except Exception as e:
@@ -214,8 +211,5 @@ class WebtoonScrapper():
                     traceback_str = ''.join(traceback.format_tb(e.__traceback__))
                     print(traceback_str)
                     print("f this bro")
-
-
-
-s = WebtoonScrapper()
-print(s.GetTotalPages())
+                
+        return returnies

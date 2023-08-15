@@ -7,10 +7,6 @@ import os
 
 class AsuraScrapper():
     def __init__(self) -> None:
-        self.client = pymongo.MongoClient("mongodb+srv://PlatinMavi:23TprQmteTiPJA6r@mangabridge.qceexb2.mongodb.net/?retryWrites=true&w=majority")
-        self.db = self.client["AsuraScans"]
-        self.collection = self.db["mangas"]
-        self.chapter = self.db["chapters"]
         self.index = 0
         
 
@@ -33,10 +29,11 @@ class AsuraScrapper():
         FixedMangas = list({str(item): item for item in mangasraw}.values())
         return FixedMangas 
     
-    def InsertManga(self):
+    def GetAllMangaDetails(self):
         content = self.GetAllManga()
         total = len(content)
         hata = []
+        returnies = []
         
         for manga in content:
             try:
@@ -74,25 +71,24 @@ class AsuraScrapper():
 
                 ins = {"name":title,"image":image,"desc":desc,"category":categorys,"browser":browser}
 
-                f = self.collection.insert_one(ins)
+                returnies.append(ins)
 
                 self.index = self.index+1
-                print(self.index,"/",total,f)
+                print(self.index,"/",total)
             except:
                 hata.append(manga)
 
-        return print("ok",hata)
+        return returnies
     
     def InsertChapters(self):
         content = self.GetAllManga()
         total = len(content)
         index = 0
+        returnies = []
         for manga in content:
             url = manga["Link"]
-            query = manga["Title"]
             html = requests.get(url).content
             soup = BeautifulSoup(html,"html.parser")
-            find = self.collection.find_one({"name":query})
             index = index + 1
 
             g = []
@@ -102,7 +98,6 @@ class AsuraScrapper():
                 link = atagi.get("href")
                 num = atagi.find("span",{"class":"chapternum"}).contents[0].split(" ")[1]
                 
-
                 # Extract numeric part from the string
                 numeric_part = re.search(r'\d+', num)
                 if numeric_part:
@@ -111,14 +106,12 @@ class AsuraScrapper():
                     extracted_num = 0  # Default value if no numeric part found
 
                 current_time = datetime.datetime.now()
-                ins = {"number":extracted_num,"url":link,"manga":find["_id"],"fansub":"AsuraScans","createdAt":current_time}
+                ins = {"number":extracted_num,"url":link,"manga":url,"fansub":"AsuraScans","createdAt":current_time}
                 g.append(ins)
-                
-                
-            f = self.chapter.insert_many(g)
-            print("(",index,"/",total,")",f)
+            returnies.append(g)
+            print("(",index,"/",total,")")
 
-        return print("ok")
+        return returnies
     
     def scrapeImage(self):
     
@@ -154,10 +147,3 @@ class AsuraScrapper():
             download_image(image,browser)
             index = index+1
             print("(",index,"/",total,")",manga["Title"])
-        
-
-  
-sc = AsuraScrapper()
-
-print(sc.InsertManga())
-print(sc.InsertChapters())

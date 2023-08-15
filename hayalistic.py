@@ -11,10 +11,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 class HayalisticScrapper():
     def __init__(self) -> None:
-        self.client = pymongo.MongoClient("mongodb+srv://PlatinMavi:23TprQmteTiPJA6r@mangabridge.qceexb2.mongodb.net/?retryWrites=true&w=majority")
-        self.db = self.client["Hayalistic"]
-        self.manga = self.db["mangas"]
-        self.chapter = self.db["chapters"]
+        pass
 
     def GetLastPage(self):
         url = "https://hayalistic.com.tr/webtoonlar/?m_orderby=alphabet"
@@ -42,11 +39,12 @@ class HayalisticScrapper():
                 allMangas.append({"title":title,"link":link,"image":image})
         return allMangas
     
-    def InsertMangas(self):
+    def GetAllMangasData(self):
         data = self.GetAllMangas()
         # data = [{"link":"https://hayalistic.com.tr/manga/zindan-sifirlanmasi/","title":"Zindan Sıfırlanması"}]
         index = 0
         total = len(data)
+        returnies = []
 
         for links in data:
             link = links["link"]
@@ -69,12 +67,12 @@ class HayalisticScrapper():
             ins = {"name":links["title"],"image":browser+".png","desc":desc,"category":category,"browser":browser,"fansub":"Hayalistic"}
             print("(",index,"/",total,")",links["title"])
             try:
-                self.manga.insert_one(ins)
+                returnies.append(ins)
             except:
-                self.manga.insert_one({"name":links["title"],"image":browser+".png","desc":"","category":category,"browser":browser,"fansub":"Hayalistic"})
-        return print("done")
+                returnies.append({"name":links["title"],"image":browser+".png","desc":"","category":category,"browser":browser,"fansub":"Hayalistic"})
+        return returnies
     
-    def InsertChapters(self):
+    def GetAllChapters(self):
         data = self.GetAllMangas()
         # data = [{"link":"https://hayalistic.com.tr/manga/a-bittersweet-couple/","browser":"a-bittersweet-couple","title":"b"}]
         total = len(data)
@@ -82,6 +80,8 @@ class HayalisticScrapper():
         options = ChromeOptions()
         options.add_argument('--headless')
         hata = []
+        returnies = []
+
         with Chrome(options=options) as driver:
             for manga in data:
                 try:
@@ -93,8 +93,6 @@ class HayalisticScrapper():
                     elements = driver.execute_script('return document.getElementsByClassName("wp-manga-chapter");')
 
                     browser = url.split("/")[-2]
-                    
-                    find = self.manga.find_one({"browser":browser})
         
                     for chapter in elements:
                         soup = BeautifulSoup(chapter.get_attribute("outerHTML"), "html.parser")
@@ -109,15 +107,15 @@ class HayalisticScrapper():
                             number = int(link.split("/")[-2].split("-")[-2])
                             
                         v = datetime.datetime.now()
-                        inserted = {"number":number,"url":link,"manga":find["_id"],"fansub":"Hayalistic","createdAt":v}
+                        inserted = {"number":number,"url":link,"manga":url,"fansub":"Hayalistic","createdAt":v}
                         ins.append(inserted)
 
                     index = index+1
                     print("(",index,"/",total,")",manga["title"])
-                    self.chapter.insert_many(ins)
+                    returnies.append(ins)
                 except:
                     hata.append(manga["title"])
-        return print(hata)
+        return returnies
     
     def ScrapeImages(self):
     
@@ -140,14 +138,5 @@ class HayalisticScrapper():
             url = image["image"]
             filename = os.path.join(output_directory, image["link"].split("/")[-2])
             download_image(url, filename+".png")
-
-
-
-
-
-
-h = HayalisticScrapper()
-
-h.ScrapeImages()
 # 24 manga
 # hata : ['Altın Çağ', 'Back to You', 'Büyü İmparatoru', 'Cadıyı Salın', 'Çok Yönlü Büyücü', 'Days of Hana', 'Devil’s Romance', 'Don’t Concern Yourself With That Book', 'Görünüşçülük', 'I Love Yoo', 'Köpek Olmak İçin Güzel Bir Gün', 'Let’s Play', 'Marriage Alliance for Revenge', 'Nasıl Dövüşürsün?', 'Nickelodeon Avatar The Last Airbender – The Lost Adventures', 'Nihayetin Ardındaki Başlangıç', 'Olympus', 'Siyah Bir Ejder Yetiştirdim', 'The Dilettante', 'The Snake and The Flower', 'Tıbbi Dönüşüm', 'Uriah', 'Yaş Önemlidir', 'Yeniden Evlenen İmparatoriçe']
