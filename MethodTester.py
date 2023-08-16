@@ -9,7 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 # soup = BeautifulSoup(html, "html.parser")
 
 def TestRequests():
-    url = "https://uzaymanga.com"
+    url = "https://clover-manga.com"
     html = requests.get(url).content.decode("utf-8", errors="ignore")
     soup = BeautifulSoup(html, "html.parser")
     return soup.prettify()
