@@ -122,8 +122,8 @@ class RuyaScrapper:
         return returnies
     
     def GetMangaImage(self):
-        # data = self.GetAllMangas()
-        data = [{"name": "Reborn Ranker", "link":"https://www.ruyamanga.com/manga/reborn-ranker/"}]
+        data = self.GetAllMangas()
+        # data = [{"name": "Reborn Ranker", "link":"https://www.ruyamanga.com/manga/reborn-ranker/"}]
 
         options = ChromeOptions()
         options.add_argument('--head')
@@ -159,10 +159,5 @@ class RuyaScrapper:
                 cropped_image.save(image_path)
                 print(f"Image saved: {image_path}")
 
-        
-
-    
-rs = RuyaScrapper()
 # with open("log.txt", "w", errors="replace") as log_file:
 #     print(rs.GetAllChapters(), file=log_file)
-rs.GetMangaImage()

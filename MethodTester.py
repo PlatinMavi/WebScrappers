@@ -8,23 +8,25 @@ from selenium.webdriver.support import expected_conditions as EC
 # html = requests.get("https://www.ruyamanga.com/manga/page/1/?m_orderby=alphabet").content.decode("utf-8", errors="ignore")
 # soup = BeautifulSoup(html, "html.parser")
 
-options = ChromeOptions()
-options.add_argument('--headless')
-options.add_argument("start-maximized")
-with Chrome(options=options) as driver:
-    driver.get("https://www.ruyamanga.com/manga/page/1/?m_orderby=alphabet")
-    WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CLASS_NAME, "page-item-detail")))
-    logger = driver.find_element(By.CLASS_NAME, "c-page").text
+def TestRequests():
+    url = "https://www.mangazure.com/search/label/T%C3%BCm%C3%BC"
+    html = requests.get(url).content.decode("utf-8", errors="ignore")
+    soup = BeautifulSoup(html, "html.parser")
+    return soup.prettify()
 
-# logger = []
+def TestSelenium():
+    options = ChromeOptions()
+    options.add_argument('--headless')
+    options.add_argument("start-maximized")
+    with Chrome(options=options) as driver:
+        driver.get("https://www.mangazure.com/search/label/T%C3%BCm%C3%BC")
+        WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CLASS_NAME, "full-page")))
+        html = driver.find_element(By.CLASS_NAME, "full-page").get_attribute("innerHTML")
 
-# manga = soup.find_all("div",{"class":"page-item-detail"})
-# for item in manga:
-#     wrapper = item.find("a")
-#     title = wrapper.get("title")
-#     link = wrapper.get("href")
+        soup = BeautifulSoup(html, "html.parser")
+    return soup.prettify()
 
-#     logger.append({"name":title ,"link":link})
+logger = TestSelenium()
 
 with open("log.txt", "w", errors="replace") as log_file:
     # Use the file object as the 'file' parameter in the print function
