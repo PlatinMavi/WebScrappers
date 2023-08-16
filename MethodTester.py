@@ -9,7 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 # soup = BeautifulSoup(html, "html.parser")
 
 def TestRequests():
-    url = "https://www.mangazure.com/search/label/T%C3%BCm%C3%BC"
+    url = "https://uzaymanga.com"
     html = requests.get(url).content.decode("utf-8", errors="ignore")
     soup = BeautifulSoup(html, "html.parser")
     return soup.prettify()
@@ -26,8 +26,7 @@ def TestSelenium():
         soup = BeautifulSoup(html, "html.parser")
     return soup.prettify()
 
-logger = TestSelenium()
+logger = TestRequests()
 
 with open("log.txt", "w", errors="replace") as log_file:
-    # Use the file object as the 'file' parameter in the print function
     print(logger, file=log_file)

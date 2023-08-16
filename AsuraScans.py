@@ -80,7 +80,7 @@ class AsuraScrapper():
 
         return returnies
     
-    def InsertChapters(self):
+    def GetAllChapters(self):
         content = self.GetAllManga()
         total = len(content)
         index = 0
@@ -113,8 +113,7 @@ class AsuraScrapper():
 
         return returnies
     
-    def scrapeImage(self):
-    
+    def GetMangaImage(self):
         def download_image(image_link,name):
             os.makedirs("AsuraScans", exist_ok=True)
 
