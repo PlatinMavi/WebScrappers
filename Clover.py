@@ -14,7 +14,7 @@ class CloverScrapper():
         lastpage = soup.find("span",{"class":"pages"}).text.strip().split(" ")[1]
         return int(lastpage)
     
-    def GetAllManga(self):
+    def GetAllMangas(self):
         data = self.GetLastPage()
         # data = 1
         returnies = []
@@ -33,7 +33,7 @@ class CloverScrapper():
         return returnies
 
     def GetAllMangaData(self):
-        data = self.GetAllManga()
+        data = self.GetAllMangas()
         # data = [{'name': '+99 Tahta çubuk', 'image': 'https://clover-manga.com/wp-content/uploads/BDC3B8AEC1EE_C7A5C1F6_690x1000-1-193x278-1-2476-175x238.jpg', 'link': 'https://clover-manga.com/manga/99-tahta-cubuk/'}]
         returnies = []
         
@@ -52,8 +52,8 @@ class CloverScrapper():
         return returnies
     
     def GetAllChapter(self):
-        # data = self.GetAllManga()
-        data = [{'name': '+99 Tahta çubuk', 'image': 'https://clover-manga.com/wp-content/uploads/BDC3B8AEC1EE_C7A5C1F6_690x1000-1-193x278-1-2476-175x238.jpg', 'link': 'https://clover-manga.com/manga/99-tahta-cubuk/'}]
+        data = self.GetAllMangas()
+        # data = [{'name': '+99 Tahta çubuk', 'image': 'https://clover-manga.com/wp-content/uploads/BDC3B8AEC1EE_C7A5C1F6_690x1000-1-193x278-1-2476-175x238.jpg', 'link': 'https://clover-manga.com/manga/99-tahta-cubuk/'}]
         returnies = []
 
         for manga in data:
@@ -88,7 +88,7 @@ class CloverScrapper():
             except Exception as e:
                 print(f"Error downloading image: {str(e)}")
 
-        content = self.GetAllManga()
+        content = self.GetAllMangas()
         # content = [{'name': '+99 Tahta çubuk', 'image': 'https://clover-manga.com/wp-content/uploads/BDC3B8AEC1EE_C7A5C1F6_690x1000-1-193x278-1-2476-175x238.jpg', 'link': 'https://clover-manga.com/manga/99-tahta-cubuk/'}]
         total = len(content)
         index = 0

@@ -10,7 +10,7 @@ class AsuraScrapper():
         self.index = 0
         
 
-    def GetAllManga(self):
+    def GetAllMangas(self):
         url = "https://asurascanstr.com/manga/list-mode/"
         html = requests.get(url).content.decode("utf-8", errors="ignore")
         soup = BeautifulSoup(html,"html.parser")
@@ -30,7 +30,7 @@ class AsuraScrapper():
         return FixedMangas 
     
     def GetAllMangaDetails(self):
-        content = self.GetAllManga()
+        content = self.GetAllMangas()
         total = len(content)
         hata = []
         returnies = []
@@ -81,7 +81,7 @@ class AsuraScrapper():
         return returnies
     
     def GetAllChapters(self):
-        content = self.GetAllManga()
+        content = self.GetAllMangas()
         total = len(content)
         index = 0
         returnies = []
@@ -133,7 +133,7 @@ class AsuraScrapper():
             except Exception as e:
                 print(f"Error downloading image: {str(e)}")
 
-        content = self.GetAllManga()
+        content = self.GetAllMangas()
         total = len(content)
         index = 0
         for manga in content:

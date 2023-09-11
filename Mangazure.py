@@ -26,7 +26,7 @@ class MangazureScrapper():
             lastpage = soup.find("div", {"class":"p-nav-right"}).text.strip().split(" ")[1]
         return int(lastpage)
     
-    def GetAllManga(self):
+    def GetAllMangas(self):
         data = self.GetLastPage()
         # data = 1
 
@@ -51,7 +51,7 @@ class MangazureScrapper():
         return returnies
     
     def GetAllMangaData(self):
-        data = self.GetAllManga()
+        data = self.GetAllMangas()
         # data = [{"name":"Dragon-Devouring Mage","link":"https://www.mangazure.com/dragondevouring-mage"}]
 
         options = ChromeOptions()
@@ -77,7 +77,7 @@ class MangazureScrapper():
         return returnies
     
     def GetAllChapters(self):
-        data = self.GetAllManga()
+        data = self.GetAllMangas()
         # data = [{"name":"Dragon-Devouring Mage","link":"https://www.mangazure.com/dragondevouring-mage"}]
 
         options = ChromeOptions()
@@ -104,7 +104,7 @@ class MangazureScrapper():
         return returnies
     
     def GetMangaImage(self):
-        data = self.GetAllManga()
+        data = self.GetAllMangas()
         # data = [{"name":"Dragon-Devouring Mage","link":"https://www.mangazure.com/dragondevouring-mage"}]
 
         options = ChromeOptions()

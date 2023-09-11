@@ -7,7 +7,7 @@ class UzayScrapper():
     def __init__(self) -> None:
         pass
 
-    def GetAllManga(self):
+    def GetAllMangas(self):
         url = "https://uzaymanga.com/manga/list-mode/"
         html = requests.get(url).content.decode("utf-8", errors="ignore")
         soup = BeautifulSoup(html, "html.parser")
@@ -20,7 +20,7 @@ class UzayScrapper():
         return returnies
     
     def GetAllMangaData(self):
-        data = self.GetAllManga()
+        data = self.GetAllMangas()
         # data = [{"name":"Acımasız Eğitmen","link":"https://uzaymanga.com/manga/acimasiz-egitmen/"}]
         returnies = []
 
@@ -39,7 +39,7 @@ class UzayScrapper():
         return returnies
     
     def GetAllChapters(self):
-        data = self.GetAllManga()
+        data = self.GetAllMangas()
         # data = [{"name":"Acımasız Eğitmen","link":"https://uzaymanga.com/manga/acimasiz-egitmen/"}]
         returnies = []
 
@@ -78,7 +78,7 @@ class UzayScrapper():
             except Exception as e:
                 print(f"Error downloading image: {str(e)}")
 
-        content = self.GetAllManga()
+        content = self.GetAllMangas()
         # content = [{"name":"Acımasız Eğitmen","link":"https://uzaymanga.com/manga/acimasiz-egitmen/"}]
         total = len(content)
         index = 0
