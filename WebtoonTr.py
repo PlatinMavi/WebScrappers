@@ -193,7 +193,7 @@ class WebtoonScrapper():
                                 except:
                                     number = len(tag)
 
-                            insert = {"number":number,"url":link,"manga":manga["Link"],"fansub":"WebtoonTr","createdAt":createdAt}
+                            insert = {"number":number,"url":link,"manga":manga["browser"],"fansub":"WebtoonTr","createdAt":createdAt}
                             
                             ins.append(insert)
                         except Exception as e:

@@ -56,7 +56,7 @@ class RuyaScrapper:
 
             return mangas
         
-    def GetAllMangaData(self):
+    def GetAllMangasData(self):
         data = self.GetAllMangas()
         # data = [{"name": "Reborn Ranker", "link":"https://www.ruyamanga.com/manga/reborn-ranker/"}]
         options = ChromeOptions()
@@ -111,7 +111,7 @@ class RuyaScrapper:
                         link = chapter.get("href")
                         num = chapter.text.strip().split(" ")[-1]
                         current_time = datetime.datetime.now()
-                        ins = {"number":int(num),"url":link,"manga":manga["link"],"fansub":"RüyaManga","createdAt":current_time}
+                        ins = {"number":int(num),"url":link,"manga":manga["link"].split("/")[-2],"fansub":"RüyaManga","createdAt":current_time}
 
                         insert.append(ins)
 

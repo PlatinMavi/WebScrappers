@@ -32,7 +32,7 @@ class CloverScrapper():
                 returnies.append({"name":title,"image":image,"link":link})
         return returnies
 
-    def GetAllMangaData(self):
+    def GetAllMangasData(self):
         data = self.GetAllMangas()
         # data = [{'name': '+99 Tahta çubuk', 'image': 'https://clover-manga.com/wp-content/uploads/BDC3B8AEC1EE_C7A5C1F6_690x1000-1-193x278-1-2476-175x238.jpg', 'link': 'https://clover-manga.com/manga/99-tahta-cubuk/'}]
         returnies = []
@@ -65,7 +65,7 @@ class CloverScrapper():
                 link = chapter.get("href")
                 number = chapter.text.strip().split(" ")[-1]
                 v = datetime.datetime.now()
-                insert.append({"number":number,"url":link,"manga":manga["link"],"fansub":"CloverManga","createdAt":v})
+                insert.append({"number":number,"url":link,"manga":manga["link"].split("/")[-2],"fansub":"CloverManga","createdAt":v})
             returnies.append(insert)
         return returnies
     

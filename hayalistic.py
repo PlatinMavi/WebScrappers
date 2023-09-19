@@ -107,7 +107,7 @@ class HayalisticScrapper():
                             number = int(link.split("/")[-2].split("-")[-2])
                             
                         v = datetime.datetime.now()
-                        inserted = {"number":number,"url":link,"manga":url,"fansub":"Hayalistic","createdAt":v}
+                        inserted = {"number":number,"url":link,"manga":url.split("/")[-2],"fansub":"Hayalistic","createdAt":v}
                         ins.append(inserted)
 
                     index = index+1

@@ -50,7 +50,7 @@ class MangazureScrapper():
                     returnies.append({"name":title ,"link":link})
         return returnies
     
-    def GetAllMangaData(self):
+    def GetAllMangasData(self):
         data = self.GetAllMangas()
         # data = [{"name":"Dragon-Devouring Mage","link":"https://www.mangazure.com/dragondevouring-mage"}]
 
@@ -99,7 +99,7 @@ class MangazureScrapper():
                     link = anchor.get("href")
                     num = anchor.text.strip().split(" ")[-1]
                     current_time = datetime.datetime.now()
-                    insert.append({"number":int(num),"url":link,"manga":manga["link"],"fansub":"Mangazure","createdAt":current_time})
+                    insert.append({"number":int(num),"url":link,"manga":manga["link"].split("/")[-1],"fansub":"Mangazure","createdAt":current_time})
                 returnies.append(insert)
         return returnies
     

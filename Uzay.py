@@ -19,7 +19,7 @@ class UzayScrapper():
 
         return returnies
     
-    def GetAllMangaData(self):
+    def GetAllMangasData(self):
         data = self.GetAllMangas()
         # data = [{"name":"Acımasız Eğitmen","link":"https://uzaymanga.com/manga/acimasiz-egitmen/"}]
         returnies = []
@@ -54,7 +54,7 @@ class UzayScrapper():
                 link = anchor.get("href")
                 num = anchor.find("span",{"class":"chapternum"}).text.strip().split(" ")[-1]
                 current_time = datetime.datetime.now()
-                insert.append({"number":num,"url":link,"manga":manga["link"],"fansub":"UzayManga","createdAt":current_time})
+                insert.append({"number":num,"url":link,"manga":manga["link"].split("/")[-2],"fansub":"UzayManga","createdAt":current_time})
             returnies.append(insert[1:])
         return returnies
     

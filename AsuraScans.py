@@ -11,7 +11,7 @@ class AsuraScrapper():
         
 
     def GetAllMangas(self):
-        url = "https://asurascanstr.com/manga/list-mode/"
+        url = "https://armoniscans.com/manga/list-mode/"
         html = requests.get(url).content.decode("utf-8", errors="ignore")
         soup = BeautifulSoup(html,"html.parser")
         mangasraw = []
@@ -29,7 +29,7 @@ class AsuraScrapper():
         FixedMangas = list({str(item): item for item in mangasraw}.values())
         return FixedMangas 
     
-    def GetAllMangaDetails(self):
+    def GetAllMangasData(self):
         content = self.GetAllMangas()
         total = len(content)
         hata = []
@@ -69,7 +69,7 @@ class AsuraScrapper():
                 except:
                     print("error", url)
 
-                ins = {"name":title,"image":image,"desc":desc,"category":categorys,"browser":browser}
+                ins = {"name":title,"image":browser,"desc":desc,"category":categorys,"browser":browser}
 
                 returnies.append(ins)
 
@@ -106,7 +106,7 @@ class AsuraScrapper():
                     extracted_num = 0  # Default value if no numeric part found
 
                 current_time = datetime.datetime.now()
-                ins = {"number":extracted_num,"url":link,"manga":url,"fansub":"AsuraScans","createdAt":current_time}
+                ins = {"number":extracted_num,"url":link,"manga":url.split("/")[-2],"fansub":"AsuraScans","createdAt":current_time}
                 g.append(ins)
             returnies.append(g)
             print("(",index,"/",total,")")
