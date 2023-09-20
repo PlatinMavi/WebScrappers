@@ -57,22 +57,24 @@ if __name__ == "__main__":
             fansub_number_tuple = tuple(document.get(field) for field in unique_fields)
             unique_field_values.add(fansub_number_tuple)
 
-        for scrapper in Scrappers[:1]:  # Modify this to use the appropriate scrapper for chapters
+        for scrapper in Scrappers:  # Modify this to use the appropriate scrapper for chapters
             chapter_data_list = scrapper.GetAllChapters()
 
             new_chapter_documents = []
 
             for chapter_data_unwrapped in chapter_data_list:
-                target = chapter_data_unwrapped[-1]["manga"]
-                obId = mangas.find_one({"browser":target})["_id"]
+                try:
+                    target = chapter_data_unwrapped[-1]["manga"]
+                    obId = mangas.find_one({"browser":target})["_id"]
 
-                for chapter_data in chapter_data_unwrapped:
-                    chapter_data["manga"] = obId
-                    fansub_number_tuple = (chapter_data["fansub"], chapter_data["number"], chapter_data["manga"])
-                    if fansub_number_tuple not in unique_field_values:
-                        new_chapter_documents.append(chapter_data)
-                        unique_field_values.add(fansub_number_tuple)  # Update the set
-
+                    for chapter_data in chapter_data_unwrapped:
+                        chapter_data["manga"] = obId
+                        fansub_number_tuple = (chapter_data["fansub"], chapter_data["number"], chapter_data["manga"])
+                        if fansub_number_tuple not in unique_field_values:
+                            new_chapter_documents.append(chapter_data)
+                            unique_field_values.add(fansub_number_tuple)  # Update the set
+                except:
+                    print("Manga Finding Error")
 
             chapter.insert_many(new_chapter_documents)
             print(f"{len(new_chapter_documents)} new chapter documents inserted from {scrapper.__class__.__name__}")
