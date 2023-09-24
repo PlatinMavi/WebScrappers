@@ -9,6 +9,7 @@ if __name__ == "__main__":
     from Mangazure import MangazureScrapper
     from Uzay import UzayScrapper
     import pymongo
+    from more_itertools import chunked
 
 
     client = pymongo.MongoClient(URI)
@@ -19,46 +20,57 @@ if __name__ == "__main__":
     Scrappers = [
         AsuraScrapper(),
         WebtoonScrapper(),
-        HayalisticScrapper(),
-        RuyaScrapper(),
+        HayalisticScrapper(), # KINDA BROKEN (nots)
+        # RuyaScrapper(), BROKEN
         CloverScrapper(),
         MangazureScrapper(),
         UzayScrapper()
     ]
 
     def ScrapeManga():
-        existing_manga_documents = mangas.find()
-        unique_fields = ["name", "browser"]
-
-        unique_field_values = set()
-        for document in existing_manga_documents:
-            for field in unique_fields:
-                unique_field_values.add(document.get(field))
-
         for scrapper in Scrappers:
-            data = scrapper.GetAllMangasData()
+            existing_manga_documents = mangas.find()
+            unique_fields = ["name", "browser"]
 
+            unique_field_values = set()
+            for document in existing_manga_documents:
+                for field in unique_fields:
+                    unique_field_values.add(document.get(field))
+        
+            data = scrapper.GetAllMangasData()
+            chunkIndex = 0
+            
             new_manga_documents = []
 
             for manga_data in data:
                 if manga_data["name"] not in unique_field_values and manga_data["browser"] not in unique_field_values:
                     new_manga_documents.append(manga_data)
 
-            mangas.insert_many(new_manga_documents)
-            print(f"{len(new_manga_documents)} new manga documents inserted from {scrapper.__class__.__name__}")
+            chunkedList = list(chunked(new_manga_documents, 50))
+            nTh = len(chunkedList)
+
+            for chunk in chunkedList:
+                try:
+                    chunkIndex += 1
+                    mangas.insert_many(chunk)
+                    print(f"{len(new_manga_documents)} new manga documents inserted from {scrapper.__class__.__name__} ({chunkIndex}/{nTh})")
+                except:
+                    print("InsertErr: Probably no new Mangas...")
 
     def ScrapeChapter():
         # Existing chapter documents and unique fields for chapters
-        existing_chapter_documents = chapter.find()
-        unique_fields = ["fansub", "number", "manga"]
+        for scrapper in Scrappers:
+            existing_chapter_documents = chapter.find()
+            unique_fields = ["fansub", "number", "manga"]
 
-        unique_field_values = set()
-        for document in existing_chapter_documents:
-            fansub_number_tuple = tuple(document.get(field) for field in unique_fields)
-            unique_field_values.add(fansub_number_tuple)
+            unique_field_values = set()
+            for document in existing_chapter_documents:
+                fansub_number_tuple = tuple(document.get(field) for field in unique_fields)
+                unique_field_values.add(fansub_number_tuple)
 
-        for scrapper in Scrappers:  # Modify this to use the appropriate scrapper for chapters
+          # Modify this to use the appropriate scrapper for chapters
             chapter_data_list = scrapper.GetAllChapters()
+            chunkIndex = 0
 
             new_chapter_documents = []
 
@@ -75,8 +87,20 @@ if __name__ == "__main__":
                             unique_field_values.add(fansub_number_tuple)  # Update the set
                 except:
                     print("Manga Finding Error")
+            
+            chunkedList = list(chunked(new_chapter_documents, 50))
+            nTh = len(chunkedList)
+            for chunk in chunkedList:
+                try:
+                    chapter.insert_many(chunk)
+                    print(f"{len(new_chapter_documents)} new chapter documents inserted from {scrapper.__class__.__name__} ({chunkIndex}/{nTh})")
+                except:
+                    print("InsertErr: Probably no new Chapters...")
 
-            chapter.insert_many(new_chapter_documents)
-            print(f"{len(new_chapter_documents)} new chapter documents inserted from {scrapper.__class__.__name__}")
+    submittedExecution = input("\033[92m1 For MangaScraping 2 For ChapterScraping : ")
 
-    ScrapeChapter()
+    match submittedExecution:
+        case "1":
+            ScrapeManga()
+        case "2":
+            ScrapeChapter()

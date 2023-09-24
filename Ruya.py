@@ -13,7 +13,7 @@ class RuyaScrapper:
         pass
 
     def GetTotalPages(self):
-        url =  "https://www.ruyamanga.com/?m_orderby=alphabet"
+        url =  "https://www.ruyamanga.com/manga/?m_orderby=alphabet"
 
         options = ChromeOptions()
         options.add_argument('--headless')
@@ -38,7 +38,7 @@ class RuyaScrapper:
         options.add_argument("start-maximized")
         with Chrome(options=options) as driver:
             for page in range(1,int(lastpage)+1):
-                url = f"https://www.ruyamanga.com/page/{page}/?m_orderby=alphabet"
+                url = f"https://www.ruyamanga.com/manga/page/{page}/?m_orderby=alphabet"
                 driver.get(url)
                 WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CLASS_NAME, "page-item-detail")))
                 html = driver.find_element(By.CLASS_NAME, "c-page").get_attribute("innerHTML").encode("utf-8")
@@ -161,3 +161,6 @@ class RuyaScrapper:
 
 # with open("log.txt", "w", errors="replace") as log_file:
 #     print(rs.GetAllChapters(), file=log_file)
+# rs = RuyaScrapper()
+# data = rs.GetTotalPages()
+# print(data)

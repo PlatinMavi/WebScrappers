@@ -74,7 +74,7 @@ class AsuraScrapper():
                 returnies.append(ins)
 
                 self.index = self.index+1
-                print(self.index,"/",total)
+                print(self.index,"/",total,title)
             except:
                 hata.append(manga)
 
