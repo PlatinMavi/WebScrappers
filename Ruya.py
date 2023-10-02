@@ -161,6 +161,6 @@ class RuyaScrapper:
 
 # with open("log.txt", "w", errors="replace") as log_file:
 #     print(rs.GetAllChapters(), file=log_file)
-# rs = RuyaScrapper()
-# data = rs.GetTotalPages()
-# print(data)
+rs = RuyaScrapper()
+data = rs.GetTotalPages()
+print(data)

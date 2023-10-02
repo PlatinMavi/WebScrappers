@@ -4,7 +4,7 @@ if __name__ == "__main__":
     from AsuraScans import AsuraScrapper
     from WebtoonTr import WebtoonScrapper
     from Hayalistic import HayalisticScrapper
-    from Ruya import RuyaScrapper
+    # from Ruya import RuyaScrapper
     from Clover import CloverScrapper
     from Mangazure import MangazureScrapper
     from Uzay import UzayScrapper
@@ -29,33 +29,50 @@ if __name__ == "__main__":
 
     def ScrapeManga():
         for scrapper in Scrappers:
-            existing_manga_documents = mangas.find()
-            unique_fields = ["name", "browser"]
+            try:
+                existing_manga_documents = mangas.find()
+                unique_fields = ["name", "browser"]
 
-            unique_field_values = set()
-            for document in existing_manga_documents:
-                for field in unique_fields:
-                    unique_field_values.add(document.get(field))
-        
-            data = scrapper.GetAllMangasData()
-            chunkIndex = 0
+                unique_field_values = set()
+                for document in existing_manga_documents:
+                    for field in unique_fields:
+                        unique_field_values.add(document.get(field))
             
-            new_manga_documents = []
+                data = scrapper.GetAllMangasData()
+                chunkIndex = 0
+                
+                new_manga_documents = []
 
-            for manga_data in data:
-                if manga_data["name"] not in unique_field_values and manga_data["browser"] not in unique_field_values:
-                    new_manga_documents.append(manga_data)
+                for manga_data in data:
+                    if manga_data["name"] not in unique_field_values and manga_data["browser"] not in unique_field_values:
+                        new_manga_documents.append(manga_data)
 
-            chunkedList = list(chunked(new_manga_documents, 50))
-            nTh = len(chunkedList)
+                chunkedList = list(chunked(new_manga_documents, 50))
+                nTh = len(chunkedList)
 
-            for chunk in chunkedList:
-                try:
-                    chunkIndex += 1
-                    mangas.insert_many(chunk)
-                    print(f"{len(new_manga_documents)} new manga documents inserted from {scrapper.__class__.__name__} ({chunkIndex}/{nTh})")
-                except:
-                    print("InsertErr: Probably no new Mangas...")
+                erroredInserts = []
+
+                for chunk in chunkedList:
+                    try:
+                        chunkIndex += 1
+                        mangas.insert_many(chunk)
+                        print(f"{len(new_manga_documents)} new manga documents inserted from {scrapper.__class__.__name__} ({chunkIndex}/{nTh})")
+                    except:
+                        print("InsertErr: Probably no new Mangas...")
+                        erroredInserts.append(chunk)
+
+                if len(erroredInserts) != 0:
+                    for reChunk in erroredInserts:
+                        try:
+                            chunkIndex += 1
+                            mangas.insert_many(reChunk)
+                            print(f"{len(erroredInserts)} new manga documents(errored) inserted from {scrapper.__class__.__name__} ({chunkIndex}/{nTh})")
+                        except:
+                            print("Some error in inssert...")
+
+
+            except:
+                print("SCRAPPER BROKE DOWN !!!")
 
     def ScrapeChapter():
         # Existing chapter documents and unique fields for chapters
