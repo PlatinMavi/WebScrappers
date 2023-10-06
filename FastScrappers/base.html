@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IFrame Scraping</title>
+</head>
+<body>
+    <input type="text" id="urlInput" placeholder="Enter URL">
+    <button id="goButton">Go</button>
+    <br>
+    <iframe id="browserFrame" style="min-height: 600px; width: 100%;"></iframe>
+
+    <script>
+        // JavaScript
+        document.addEventListener("DOMContentLoaded", function () {
+            const urlInput = document.getElementById("urlInput");
+            const goButton = document.getElementById("goButton");
+            const browserFrame = document.getElementById("browserFrame");
+
+            // Event listener for the "Go" button
+            goButton.addEventListener("click", function () {
+                const url = urlInput.value;
+                browserFrame.src = url; // Load the URL in the iframe
+
+            });
+        });
+    </script>
+</body>
+</html>
