@@ -1,7 +1,14 @@
 URI = "mongodb+srv://MangaBridge:MangaBridge@mangabridgetest.opuehm4.mongodb.net/?retryWrites=true&w=majority"
 
 if __name__ == "__main__":
-    from webtoontr import Webtoontr
+    from webtoontr import Webtoontr #backbone
+    from mangazure import Mangazure #backbone
+    from hayalistic import Hayalistic #backbone (Kinda)
+    from armoniscans import Armoni
+    from clover import Clover
+    from uzay import Uzay #spine
+    from ruya import Ruya
+
     import pymongo
     from more_itertools import chunked
 
@@ -12,7 +19,13 @@ if __name__ == "__main__":
     chapter = db["Chapter"]
 
     Scrappers = [
-        Webtoontr()
+        # Webtoontr(),
+        # Mangazure(),
+        Ruya(),
+        Hayalistic(),
+        Armoni(),
+        Clover(),
+        Uzay()
     ]
 
     def ScrapeManga():

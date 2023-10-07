@@ -20,7 +20,7 @@ class Mangazure:
         for pgnum in range(1,lastpage+1):
             urls.append({"url":f"https://www.mangazure.com/search/label/T%C3%BCm%C3%BC?p={pgnum}","element":"content-out"})
 
-        htmls = backbone.Scrape(urls)
+        htmls = backbone.Scrape(urls,wait=1,threadCount=1)
 
         for html in htmls:
             try:
@@ -42,7 +42,7 @@ class Mangazure:
         for url in data:
             urls.append({"url":url["link"],"element":"manga-detail"})
         
-        htmls = backbone.Scrape(urls)
+        htmls = backbone.Scrape(urls,wait=1,threadCount=1)
 
         for x,html in enumerate(htmls):
             try:    
@@ -68,7 +68,7 @@ class Mangazure:
         for url in data:
             urls.append({"url":url["link"],"element":"mdr-list"})
         
-        htmls = backbone.Scrape(urls,wait=0.8)
+        htmls = backbone.Scrape(urls,wait=1.2,threadCount=1)
 
         for x,html in enumerate(htmls):
             try:
