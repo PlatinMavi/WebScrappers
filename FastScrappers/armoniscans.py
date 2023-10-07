@@ -2,14 +2,13 @@ from bs4 import BeautifulSoup
 import requests
 import datetime
 import re
-import os
 
-class AsuraScrapper():
+class Armoni():
     def __init__(self) -> None:
         self.index = 0
         
 
-    def GetAllMangas(self):
+    def GetAllManga(self):
         url = "https://armoniscans.com/manga/list-mode/"
         html = requests.get(url).content.decode("utf-8", errors="ignore")
         soup = BeautifulSoup(html,"html.parser")
@@ -28,8 +27,8 @@ class AsuraScrapper():
         FixedMangas = list({str(item): item for item in mangasraw}.values())
         return FixedMangas 
     
-    def GetAllMangasData(self):
-        content = self.GetAllMangas()
+    def GetAllMangaData(self):
+        content = self.GetAllManga()
         total = len(content)
         hata = []
         returnies = []
@@ -79,8 +78,8 @@ class AsuraScrapper():
 
         return returnies
     
-    def GetAllChapters(self):
-        content = self.GetAllMangas()
+    def GetAllChapter(self):
+        content = self.GetAllManga()
         total = len(content)
         index = 0
         returnies = []
@@ -111,37 +110,3 @@ class AsuraScrapper():
             print("(",index,"/",total,")")
 
         return returnies
-    
-    def GetMangaImage(self):
-        def download_image(image_link,name):
-            os.makedirs("AsuraScans", exist_ok=True)
-
-            try:
-                response = requests.get(image_link)
-                if response.status_code == 200:
-                    # Extract the filename from the URL
-                    filename = os.path.join("AsuraScans", name+"AsuraScans"+".png")
-
-                    # Save the image file
-                    with open(filename, "wb") as file:
-                        file.write(response.content)
-
-                    print("Image downloaded successfully.")
-                else:
-                    print(f"Failed to download image. Status code: {response.status_code}")
-            except Exception as e:
-                print(f"Error downloading image: {str(e)}")
-
-        content = self.GetAllMangas()
-        total = len(content)
-        index = 0
-        for manga in content:
-            url = manga["Link"]
-            html = requests.get(url).content.decode("utf-8", errors="ignore")
-            soup = BeautifulSoup(html,"html.parser")
-
-            browser = url.split("/")[-2]
-            image = str(soup.find("img",{"class":"wp-post-image"})["src"])
-            download_image(image,browser)
-            index = index+1
-            print("(",index,"/",total,")",manga["Title"])

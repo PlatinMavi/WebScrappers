@@ -6,6 +6,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 import os
 import threading
+import time
 
 def sliceList(listw, partnum):
     part_size = len(listw) // partnum
@@ -23,7 +24,7 @@ def sliceList(listw, partnum):
 def ScrapeModule(
     urls=[
         {"url":"https://example.com","element":"ExampleClassName"},
-    ]):
+    ],wait=0):
 
     copt = Options()
     copt.add_argument("--headless")
@@ -47,6 +48,7 @@ def ScrapeModule(
             go_button.click()
 
             WebDriverWait(driver, 10).until(EC.frame_to_be_available_and_switch_to_it((By.ID, 'browserFrame')))
+            time.sleep(wait)
             WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME,url["element"])))
 
             page_source = driver.page_source
@@ -65,6 +67,7 @@ def ScrapeModule(
                 go_button.click()
 
                 WebDriverWait(driver, 10).until(EC.frame_to_be_available_and_switch_to_it((By.TAG_NAME, 'body')))
+                time.sleep(wait)
                 WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME,url["element"])))
             except:
                 pass
@@ -75,15 +78,13 @@ def ScrapeModule(
     driver.quit()
     return returnies
 
-import threading
-
 def Scrape(
     urls=[
         {"url":"https://example.com","element":"ExampleClassName"},
-    ],threadCount=4):
+    ],threadCount=4,wait=0):
 
     if len(urls) <= 3:
-        scraped = ScrapeModule(urls)
+        scraped = ScrapeModule(urls,wait)
         return scraped
 
     sliced = sliceList(urls, threadCount)
@@ -91,7 +92,7 @@ def Scrape(
     returnies = []
 
     def worker(url_chunk):
-        result = ScrapeModule(url_chunk)
+        result = ScrapeModule(url_chunk,wait)
         returnies.extend(result)
 
     for url_chunk in sliced:

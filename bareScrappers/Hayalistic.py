@@ -140,3 +140,4 @@ class HayalisticScrapper():
             download_image(url, filename+".png")
 # 24 manga
 # hata : ['Altın Çağ', 'Back to You', 'Büyü İmparatoru', 'Cadıyı Salın', 'Çok Yönlü Büyücü', 'Days of Hana', 'Devil’s Romance', 'Don’t Concern Yourself With That Book', 'Görünüşçülük', 'I Love Yoo', 'Köpek Olmak İçin Güzel Bir Gün', 'Let’s Play', 'Marriage Alliance for Revenge', 'Nasıl Dövüşürsün?', 'Nickelodeon Avatar The Last Airbender – The Lost Adventures', 'Nihayetin Ardındaki Başlangıç', 'Olympus', 'Siyah Bir Ejder Yetiştirdim', 'The Dilettante', 'The Snake and The Flower', 'Tıbbi Dönüşüm', 'Uriah', 'Yaş Önemlidir', 'Yeniden Evlenen İmparatoriçe']
+# print(HayalisticScrapper().GetAllMangasData())

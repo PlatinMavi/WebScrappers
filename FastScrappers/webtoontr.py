@@ -117,5 +117,5 @@ class Webtoontr:
                 
                 returnies.append(ins)
             except:
-                print("Error!")
+                print("Error!", link)
         return returnies
