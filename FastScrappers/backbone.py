@@ -5,12 +5,25 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 import os
+import threading
 
-def Scrape(
+def sliceList(listw, partnum):
+    part_size = len(listw) // partnum
+    extra = len(listw) % partnum
+    lists = []
+
+    start = 0
+    for i in range(partnum):
+        end = start + part_size + (1 if i < extra else 0)
+        lists.append(listw[start:end])
+        start = end
+
+    return lists
+
+def ScrapeModule(
     urls=[
         {"url":"https://example.com","element":"ExampleClassName"},
-    ]
-    ):
+    ]):
 
     copt = Options()
     copt.add_argument("--headless")
@@ -60,4 +73,35 @@ def Scrape(
         print(f"{index} / {lengthofurl}")
 
     driver.quit()
+    return returnies
+
+import threading
+
+def Scrape(
+    urls=[
+        {"url":"https://example.com","element":"ExampleClassName"},
+    ],threadCount=4):
+
+    if len(urls) <= 3:
+        scraped = ScrapeModule(urls)
+        return scraped
+
+    sliced = sliceList(urls, threadCount)
+    threads = []
+    returnies = []
+
+    def worker(url_chunk):
+        result = ScrapeModule(url_chunk)
+        returnies.extend(result)
+
+    for url_chunk in sliced:
+        thread = threading.Thread(target=worker, args=(url_chunk,))
+        threads.append(thread)
+
+    for thread in threads:
+        thread.start()
+
+    for thread in threads:
+        thread.join()
+
     return returnies
