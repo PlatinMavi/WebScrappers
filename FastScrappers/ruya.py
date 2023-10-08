@@ -23,7 +23,7 @@ class Ruya:
         returnies = []
         for pgnum in range(1,lastpage+1):
             urls.append(f"https://www.ruyamanga.com/manga/page/{pgnum}/?m_orderby=alphabet")
-        htmls = spine.Scrape(urls,wait=1)
+        htmls = spine.Scrape(urls,wait=1,tab_switch=5)
 
         for html in htmls:
             try:
@@ -44,7 +44,7 @@ class Ruya:
         returnies = []
         for url in data:
             urls.append(url["link"])
-        htmls = spine.Scrape(urls,wait=1)
+        htmls = spine.Scrape(urls,wait=1,tab_switch=5)
 
         for x,html in enumerate(htmls):
             try:
@@ -71,7 +71,7 @@ class Ruya:
         returnies = []
         for url in data:
             urls.append(url["link"])
-        htmls = spine.Scrape(urls,wait=1)
+        htmls = spine.Scrape(urls,wait=1,tab_switch=5)
 
         for x,html in enumerate(htmls):
             insert = []
@@ -92,4 +92,4 @@ class Ruya:
                 print("parsing err")
         return returnies
     
-# print(Ruya().GetAllMangaData())
+print(Ruya().GetAllManga())
