@@ -6,8 +6,8 @@ if __name__ == "__main__":
     from hayalistic import Hayalistic #backbone (Kinda)
     from armoniscans import Armoni
     from clover import Clover
-    from uzay import Uzay #spine
-    from ruya import Ruya
+    from uzay import Uzay 
+    from ruya import Ruya #spine
 
     import pymongo
     from more_itertools import chunked
@@ -19,13 +19,13 @@ if __name__ == "__main__":
     chapter = db["Chapter"]
 
     Scrappers = [
-        # Webtoontr(),
-        # Mangazure(),
+        Webtoontr(),
+        Mangazure(),
         Ruya(),
         Hayalistic(),
         Armoni(),
-        Clover(),
-        Uzay()
+        # Clover(), bozuk
+        # Uzay() bozuk
     ]
 
     def ScrapeManga():
@@ -77,8 +77,9 @@ if __name__ == "__main__":
                                     print("inserr...")
 
 
-            except:
-                print("SCRAPPER BROKE DOWN !!!")
+            except Exception as e:
+                print("SCRAPPER BROKE DOWN !!!",e)
+                input("Waiting input to continue")
 
     def ScrapeChapter():
         # Existing chapter documents and unique fields for chapters

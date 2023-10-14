@@ -8,7 +8,7 @@ class Ruya:
         pass
 
     def GetLastPage(self):
-        htmls = spine.Scrape(["https://www.ruyamanga.com/manga/?m_orderby=alphabet"],wait=1)
+        htmls = spine.Scrape(["https://www.ruyamanga.com/manga/?m_orderby=alphabet"],wait=0)
         try:
             soup = BeautifulSoup(str(htmls[0]),"html.parser")
             total = math.ceil(int(soup.find("div",{"class":"h4"}).text.strip().split(" ")[0])/18)
@@ -23,7 +23,7 @@ class Ruya:
         returnies = []
         for pgnum in range(1,lastpage+1):
             urls.append(f"https://www.ruyamanga.com/manga/page/{pgnum}/?m_orderby=alphabet")
-        htmls = spine.Scrape(urls,wait=1,tab_switch=5)
+        htmls = spine.Scrape(urls,wait=0,tab_switch=4)
 
         for html in htmls:
             try:
@@ -44,7 +44,7 @@ class Ruya:
         returnies = []
         for url in data:
             urls.append(url["link"])
-        htmls = spine.Scrape(urls,wait=1,tab_switch=5)
+        htmls = spine.Scrape(urls,wait=0,tab_switch=4)
 
         for x,html in enumerate(htmls):
             try:
@@ -71,7 +71,7 @@ class Ruya:
         returnies = []
         for url in data:
             urls.append(url["link"])
-        htmls = spine.Scrape(urls,wait=1,tab_switch=5)
+        htmls = spine.Scrape(urls,wait=0,tab_switch=4)
 
         for x,html in enumerate(htmls):
             insert = []
@@ -91,5 +91,3 @@ class Ruya:
             except:
                 print("parsing err")
         return returnies
-    
-print(Ruya().GetAllManga())
