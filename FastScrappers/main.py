@@ -1,4 +1,5 @@
-URI = "mongodb+srv://MangaBridge:MangaBridge@mangabridgetest.opuehm4.mongodb.net/?retryWrites=true&w=majority"
+# URI = "mongodb+srv://MangaBridge:MangaBridge@mangabridgetest.opuehm4.mongodb.net/?retryWrites=true&w=majority"
+URI = "mongodb://localhost:27017/MangaBridge"
 
 if __name__ == "__main__":
     from webtoontr import Webtoontr #backbone
