@@ -18,7 +18,7 @@ def getPageSource(tab, url):
     while not page_loaded:
         tab.wait(0.1)
 
-    result = tab.Runtime.evaluate(expression="document.documentElement.outerHTML")
+    result = tab.Runtime.evaluate(expression="document.documentElement.innerHTML")
 
     return result
 
@@ -89,3 +89,5 @@ def Scrape(urls=["https://www.ruyamanga.com/", "https://mangasehri.com/"], wait=
             browser.close_tab(tb)
 
     return returnies
+
+# Scrape()

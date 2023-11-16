@@ -8,10 +8,12 @@ class Ruya:
         pass
 
     def GetLastPage(self):
-        htmls = spine.Scrape(["https://www.ruyamanga.com/manga/?m_orderby=alphabet"],wait=0)
+        htmls = spine.Scrape(["https://www.ruyamanga.com/manga/?m_orderby=alphabet"],wait=2)
         try:
             soup = BeautifulSoup(str(htmls[0]),"html.parser")
+            print(htmls) #ANASINI SİKTİNİZ MEMLEKETİN ANASINI
             total = math.ceil(int(soup.find("div",{"class":"h4"}).text.strip().split(" ")[0])/18)
+            
             return total
         except:
             print("parsing err")

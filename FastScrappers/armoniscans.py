@@ -104,7 +104,7 @@ class Armoni():
                     extracted_num = 0  # Default value if no numeric part found
 
                 current_time = datetime.datetime.now()
-                ins = {"number":extracted_num,"url":link,"manga":url.split("/")[-2],"fansub":"AsuraScans","createdAt":current_time}
+                ins = {"number":extracted_num,"url":link,"manga":url.split("/")[-2],"fansub":"ArmoniScans","createdAt":current_time}
                 g.append(ins)
             returnies.append(g)
             print("(",index,"/",total,")")
